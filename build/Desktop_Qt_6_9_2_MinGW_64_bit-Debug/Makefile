@@ -35,7 +35,8 @@ RES_FILE      =
 SED           = $(QMAKE) -install sed
 MOVE          = move
 SUBTARGETS    =  \
-		sub-ChatClient
+		sub-ChatClient \
+		sub-ChatServer
 
 
 sub-ChatClient-qmake_all:  FORCE
@@ -63,6 +64,31 @@ sub-ChatClient-install_subtargets: FORCE
 sub-ChatClient-uninstall_subtargets: FORCE
 	@if not exist ChatClient\ mkdir ChatClient\ & if not exist ChatClient\ exit 1
 	cd ChatClient\ && ( if not exist Makefile $(QMAKE) -o Makefile D:\Qt_dev\Lab5\ChatClient\ChatClient.pro -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug" ) && $(MAKE) -f Makefile uninstall
+sub-ChatServer-qmake_all:  FORCE
+	@if not exist ChatServer\ mkdir ChatServer\ & if not exist ChatServer\ exit 1
+	cd ChatServer\ && $(QMAKE) -o Makefile D:\Qt_dev\Lab5\ChatServer\ChatServer.pro -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug"
+	cd ChatServer\ && $(MAKE) -f Makefile qmake_all
+sub-ChatServer: FORCE
+	@if not exist ChatServer\ mkdir ChatServer\ & if not exist ChatServer\ exit 1
+	cd ChatServer\ && ( if not exist Makefile $(QMAKE) -o Makefile D:\Qt_dev\Lab5\ChatServer\ChatServer.pro -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug" ) && $(MAKE) -f Makefile
+sub-ChatServer-make_first: FORCE
+	@if not exist ChatServer\ mkdir ChatServer\ & if not exist ChatServer\ exit 1
+	cd ChatServer\ && ( if not exist Makefile $(QMAKE) -o Makefile D:\Qt_dev\Lab5\ChatServer\ChatServer.pro -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug" ) && $(MAKE) -f Makefile 
+sub-ChatServer-all: FORCE
+	@if not exist ChatServer\ mkdir ChatServer\ & if not exist ChatServer\ exit 1
+	cd ChatServer\ && ( if not exist Makefile $(QMAKE) -o Makefile D:\Qt_dev\Lab5\ChatServer\ChatServer.pro -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug" ) && $(MAKE) -f Makefile all
+sub-ChatServer-clean: FORCE
+	@if not exist ChatServer\ mkdir ChatServer\ & if not exist ChatServer\ exit 1
+	cd ChatServer\ && ( if not exist Makefile $(QMAKE) -o Makefile D:\Qt_dev\Lab5\ChatServer\ChatServer.pro -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug" ) && $(MAKE) -f Makefile clean
+sub-ChatServer-distclean: FORCE
+	@if not exist ChatServer\ mkdir ChatServer\ & if not exist ChatServer\ exit 1
+	cd ChatServer\ && ( if not exist Makefile $(QMAKE) -o Makefile D:\Qt_dev\Lab5\ChatServer\ChatServer.pro -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug" ) && $(MAKE) -f Makefile distclean
+sub-ChatServer-install_subtargets: FORCE
+	@if not exist ChatServer\ mkdir ChatServer\ & if not exist ChatServer\ exit 1
+	cd ChatServer\ && ( if not exist Makefile $(QMAKE) -o Makefile D:\Qt_dev\Lab5\ChatServer\ChatServer.pro -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug" ) && $(MAKE) -f Makefile install
+sub-ChatServer-uninstall_subtargets: FORCE
+	@if not exist ChatServer\ mkdir ChatServer\ & if not exist ChatServer\ exit 1
+	cd ChatServer\ && ( if not exist Makefile $(QMAKE) -o Makefile D:\Qt_dev\Lab5\ChatServer\ChatServer.pro -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug" ) && $(MAKE) -f Makefile uninstall
 
 Makefile: ../../Lab5.pro ../../../../qt6/6.9.2/mingw_64/mkspecs/win32-g++/qmake.conf ../../../../qt6/6.9.2/mingw_64/mkspecs/features/spec_pre.prf \
 		../../../../qt6/6.9.2/mingw_64/mkspecs/features/device_config.prf \
@@ -275,6 +301,7 @@ Makefile: ../../Lab5.pro ../../../../qt6/6.9.2/mingw_64/mkspecs/win32-g++/qmake.
 		../../../../qt6/6.9.2/mingw_64/mkspecs/features/qt_config.prf \
 		../../../../qt6/6.9.2/mingw_64/mkspecs/win32-g++/qmake.conf \
 		../../../../qt6/6.9.2/mingw_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		../../../../qt6/6.9.2/mingw_64/mkspecs/features/exclusive_builds.prf \
 		../../../../qt6/6.9.2/mingw_64/mkspecs/features/toolchain.prf \
 		../../../../qt6/6.9.2/mingw_64/mkspecs/features/default_pre.prf \
@@ -505,6 +532,7 @@ Makefile: ../../Lab5.pro ../../../../qt6/6.9.2/mingw_64/mkspecs/win32-g++/qmake.
 ../../../../qt6/6.9.2/mingw_64/mkspecs/features/qt_config.prf:
 ../../../../qt6/6.9.2/mingw_64/mkspecs/win32-g++/qmake.conf:
 ../../../../qt6/6.9.2/mingw_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 ../../../../qt6/6.9.2/mingw_64/mkspecs/features/exclusive_builds.prf:
 ../../../../qt6/6.9.2/mingw_64/mkspecs/features/toolchain.prf:
 ../../../../qt6/6.9.2/mingw_64/mkspecs/features/default_pre.prf:
@@ -526,36 +554,48 @@ Makefile: ../../Lab5.pro ../../../../qt6/6.9.2/mingw_64/mkspecs/win32-g++/qmake.
 qmake: FORCE
 	@$(QMAKE) -o Makefile ..\..\Lab5.pro -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug"
 
-qmake_all: sub-ChatClient-qmake_all FORCE
+qmake_all: sub-ChatClient-qmake_all sub-ChatServer-qmake_all FORCE
 
-make_first: sub-ChatClient-make_first  FORCE
-all: sub-ChatClient-all  FORCE
-clean: sub-ChatClient-clean  FORCE
-distclean: sub-ChatClient-distclean  FORCE
+make_first: sub-ChatClient-make_first sub-ChatServer-make_first  FORCE
+all: sub-ChatClient-all sub-ChatServer-all  FORCE
+clean: sub-ChatClient-clean sub-ChatServer-clean  FORCE
+distclean: sub-ChatClient-distclean sub-ChatServer-distclean  FORCE
 	-$(DEL_FILE) Makefile
 	-$(DEL_FILE) .qmake.stash
-install_subtargets: sub-ChatClient-install_subtargets FORCE
-uninstall_subtargets: sub-ChatClient-uninstall_subtargets FORCE
+install_subtargets: sub-ChatClient-install_subtargets sub-ChatServer-install_subtargets FORCE
+uninstall_subtargets: sub-ChatClient-uninstall_subtargets sub-ChatServer-uninstall_subtargets FORCE
 
 sub-ChatClient-debug:
 	@if not exist ChatClient\ mkdir ChatClient\ & if not exist ChatClient\ exit 1
 	cd ChatClient\ && ( if not exist Makefile $(QMAKE) -o Makefile D:\Qt_dev\Lab5\ChatClient\ChatClient.pro -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug" ) && $(MAKE) -f Makefile debug
-debug: sub-ChatClient-debug
+sub-ChatServer-debug:
+	@if not exist ChatServer\ mkdir ChatServer\ & if not exist ChatServer\ exit 1
+	cd ChatServer\ && ( if not exist Makefile $(QMAKE) -o Makefile D:\Qt_dev\Lab5\ChatServer\ChatServer.pro -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug" ) && $(MAKE) -f Makefile debug
+debug: sub-ChatClient-debug sub-ChatServer-debug
 
 sub-ChatClient-release:
 	@if not exist ChatClient\ mkdir ChatClient\ & if not exist ChatClient\ exit 1
 	cd ChatClient\ && ( if not exist Makefile $(QMAKE) -o Makefile D:\Qt_dev\Lab5\ChatClient\ChatClient.pro -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug" ) && $(MAKE) -f Makefile release
-release: sub-ChatClient-release
+sub-ChatServer-release:
+	@if not exist ChatServer\ mkdir ChatServer\ & if not exist ChatServer\ exit 1
+	cd ChatServer\ && ( if not exist Makefile $(QMAKE) -o Makefile D:\Qt_dev\Lab5\ChatServer\ChatServer.pro -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug" ) && $(MAKE) -f Makefile release
+release: sub-ChatClient-release sub-ChatServer-release
 
 sub-ChatClient-check:
 	@if not exist ChatClient\ mkdir ChatClient\ & if not exist ChatClient\ exit 1
 	cd ChatClient\ && ( if not exist Makefile $(QMAKE) -o Makefile D:\Qt_dev\Lab5\ChatClient\ChatClient.pro -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug" ) && $(MAKE) -f Makefile check
-check: sub-ChatClient-check
+sub-ChatServer-check:
+	@if not exist ChatServer\ mkdir ChatServer\ & if not exist ChatServer\ exit 1
+	cd ChatServer\ && ( if not exist Makefile $(QMAKE) -o Makefile D:\Qt_dev\Lab5\ChatServer\ChatServer.pro -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug" ) && $(MAKE) -f Makefile check
+check: sub-ChatClient-check sub-ChatServer-check
 
 sub-ChatClient-benchmark:
 	@if not exist ChatClient\ mkdir ChatClient\ & if not exist ChatClient\ exit 1
 	cd ChatClient\ && ( if not exist Makefile $(QMAKE) -o Makefile D:\Qt_dev\Lab5\ChatClient\ChatClient.pro -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug" ) && $(MAKE) -f Makefile benchmark
-benchmark: sub-ChatClient-benchmark
+sub-ChatServer-benchmark:
+	@if not exist ChatServer\ mkdir ChatServer\ & if not exist ChatServer\ exit 1
+	cd ChatServer\ && ( if not exist Makefile $(QMAKE) -o Makefile D:\Qt_dev\Lab5\ChatServer\ChatServer.pro -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug" ) && $(MAKE) -f Makefile benchmark
+benchmark: sub-ChatClient-benchmark sub-ChatServer-benchmark
 install:install_subtargets  FORCE
 
 uninstall: uninstall_subtargets FORCE
