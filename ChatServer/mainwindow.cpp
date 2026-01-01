@@ -1,12 +1,16 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-}
+    m_chatServer=new ChatServer(this);
+
+    connect(m_chatServer,&ChatServer::logMessage,this,&MainWindow::logMessage);
+    }
 
 MainWindow::~MainWindow()
 {
@@ -15,17 +19,28 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_startstopButton_clicked()
 {
-    static bool started=false;
-    started=!started;
-    if(started){
-        ui->startstopButton->setText("停止服务器");
-        logMessage("服务器已经启动");
-    }
-    else{
+    //static bool started=false;
+    //started=!started;
+    //if(started){
+    //    ui->startstopButton->setText("停止服务器");
+    //    logMessage("服务器已经启动");
+    //}
+    //else{
+    //    ui->startstopButton->setText("启动服务器");
+    //    logMessage("服务器已经停止");
+    //}
+    if(m_chatServer->isListening()){
+        m_chatServer->stopServer();
         ui->startstopButton->setText("启动服务器");
         logMessage("服务器已经停止");
+    }else{
+        if(!m_chatServer->listen(QHostAddress::Any,1967)){
+            QMessageBox::critical(this,"错误","无法启动服务器");
+            return;
+        }
+        logMessage("服务器已启动");
+        ui->startstopButton->setText("停止服务器");
     }
-
 
 
 }
