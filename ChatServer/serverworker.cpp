@@ -3,8 +3,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 
-ServerWorker::ServerWorker(QObject *parent)
-    : QObject{parent}
+ServerWorker::ServerWorker(QObject *parent): QObject{parent}
 {
     m_serverSocket=new QTcpSocket(this);
     connect(m_serverSocket,&QTcpSocket::readyRead,this,&ServerWorker::onReadyRead);
@@ -20,14 +19,27 @@ void ServerWorker::onReadyRead()
 {
     QByteArray jsonData;
     QDataStream socketStream(m_serverSocket);
-    socketStream.setVersion(QDataStream::Qt_5_12);
+    socketStream.setVersion(QDataStream::Qt_5_12); //
+
     for(;;){
         socketStream.startTransaction();
-        socketStream>>jsonData;
+        socketStream >> jsonData; //
+
         if(socketStream.commitTransaction()){
-            emit logMessage(QString::fromUtf8(jsonData));
-            sendMessage("我收到消息了");
-        }else{
+            // 解析 JSON
+            QJsonDocument doc = QJsonDocument::fromJson(jsonData);
+            if (!doc.isNull() && doc.isObject()) {
+                QJsonObject obj = doc.object();
+                QString type = obj["type"].toString();
+                QString text = obj["text"].toString();
+
+                // 格式化输出到服务器日志
+                emit logMessage(QString("[%1] %2").arg(type, text));
+            } else {
+                emit logMessage("收到非 JSON 格式数据: " + QString::fromUtf8(jsonData));
+            }
+            sendMessage("我收到消息了"); //
+        } else {
             break;
         }
     }

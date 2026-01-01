@@ -38,7 +38,7 @@ void MainWindow::on_startstopButton_clicked()
             QMessageBox::critical(this,"错误","无法启动服务器");
             return;
         }
-        logMessage("服务器已启动");
+        logMessage("服务器已经启动");
         ui->startstopButton->setText("停止服务器");
     }
 
