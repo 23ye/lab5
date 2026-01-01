@@ -2,6 +2,7 @@
 #include <QDataStream>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QJsonObject>
 
 ServerWorker::ServerWorker(QObject *parent): QObject{parent}
 {
@@ -34,8 +35,16 @@ void ServerWorker::onReadyRead()
         socketStream.startTransaction();
         socketStream>>jsonData;
         if(socketStream.commitTransaction()){
-            emit logMessage(QString::fromUtf8(jsonData));
-            sendMessage("I recieved message");
+            QJsonParseError parseError;
+            const QJsonDocument jsonDoc=QJsonDocument::fromJson(jsonData,&parseError);
+            if(parseError.error==QJsonParseError::NoError){
+                if(jsonDoc.isObject()){
+                    emit logMessage(QJsonDocument(jsonDoc).toJson(QJsonDocument::Compact));
+                    emit jsonReceived(this,jsonDoc.object());
+                }
+            }
+            //emit logMessage(QString::fromUtf8(jsonData));
+           //sendMessage("I recieved message");
         }else{
             break;
         }
@@ -65,6 +74,6 @@ void ServerWorker::sendJson(const QJsonObject &json)
     emit logMessage(QLatin1String("Sending to ")+userName()+QLatin1String(" - ")+
                     QString::fromUtf8(jsonData));
     QDataStream socketStream(m_serverSocket);
-    socketStream.setVersion(QDataStream::Qt_5_7);
+    socketStream.setVersion(QDataStream::Qt_5_12);
     socketStream<<jsonData;
 }

@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QHostAddress>
+#include <QJsonValue>
+#include <QJsonObject>
+#include <QJsonArray>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -11,7 +14,9 @@ MainWindow::MainWindow(QWidget *parent)
     m_chatClient=new ChatClient(this);
 
     connect(m_chatClient, &ChatClient::connected, this, &MainWindow::connectedToServer);
-    connect(m_chatClient,&ChatClient::messageReceived,this,&MainWindow::messageReceived);
+    //connect(m_chatClient,&ChatClient::messageReceived,this,&MainWindow::messageReceived);
+    connect(m_chatClient,&ChatClient::jsonReceived,this,&MainWindow::jsonReceived);
+
 
 
 }
@@ -23,7 +28,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_LoginButton_clicked()
 {
-    m_chatClient->connectToServer(QHostAddress(ui->Server->text()),1967);
+
+    m_chatClient->connectToServer(QHostAddress(ui->ServerEdit->text()),1967);
 
 }
 
@@ -38,7 +44,7 @@ void MainWindow::on_SendButton_clicked()
 
 void MainWindow::on_ExitButton_clicked()
 {
-
+    m_chatClient->disconnectFromServer();
     ui->stackedWidget->setCurrentWidget(ui->LoginPage);
 }
 
@@ -46,13 +52,67 @@ void MainWindow::connectedToServer()
 {
     ui->stackedWidget->setCurrentWidget(ui->ChatPage);
     ui->roomTextEdit->append("新用户已连接");
-    m_chatClient->sendMessage(ui->UserName->text(),"login");
+    m_chatClient->sendMessage(ui->UserNameEdit->text(),"login");
 
 }
 
-void MainWindow::messageReceived(const QString &text)
+void MainWindow::messageReceived(const QString &sender,const QString &text)
 {
-    ui->roomTextEdit->append(text);
+    ui->roomTextEdit->append(QString(" %1：%2 ").arg(sender).arg(text));
 
+}
+
+void MainWindow::jsonReceived(const QJsonObject &docObj)
+{
+    const QJsonValue typeVal=docObj.value("type");
+    if(typeVal.isNull()||!typeVal.isString())
+        return;
+    if(typeVal.toString().compare("message",Qt::CaseInsensitive)==0){
+        const QJsonValue textVal=docObj.value("text");
+        const QJsonValue senderVal=docObj.value("sender");
+        if(textVal.isNull()||!textVal.isString())
+            return;
+
+        if(senderVal.isNull()||!senderVal.isString())
+            return;
+
+        messageReceived(senderVal.toString(),textVal.toString());
+
+    }else if(typeVal.toString().compare("newuser",Qt::CaseInsensitive)==0){
+        const QJsonValue usernameVal=docObj.value("username");
+        if(usernameVal.isNull()||!usernameVal.isString())
+            return;
+
+        userJoined(usernameVal.toString());
+    }
+    else if(typeVal.toString().compare("userdisconnected",Qt::CaseInsensitive)==0){
+        const QJsonValue usernameVal=docObj.value("username");
+        if(usernameVal.isNull()||!usernameVal.isString())
+            return;
+
+        userLeft(usernameVal.toString());
+    }else if(typeVal.toString().compare("userlist",Qt::CaseInsensitive)==0){
+        const QJsonValue userlistVal=docObj.value("userlist");
+        if(userlistVal.isNull()||!userlistVal.isArray())
+            return;
+        qDebug()<<userlistVal.toVariant().toStringList();
+        userListReceived(userlistVal.toVariant().toStringList());
+    }
+}
+
+void MainWindow::userJoined(const QString &user)
+{
+    ui->userListWidget->addItem(user);
+}
+
+void MainWindow::userLeft(const QString &user)
+{
+
+}
+
+void MainWindow::userListReceived(const QStringList &list)
+{
+    ui->userListWidget->clear();
+    ui->userListWidget->addItems(list);
 }
 
