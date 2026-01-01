@@ -23,7 +23,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_LoginButton_clicked()
 {
-    m_chatClient->connectToServer(QHostAddress(ui->ServerEdit->text()),1967);
+    m_chatClient->connectToServer(QHostAddress(ui->Server->text()),1967);
 
 }
 
@@ -45,7 +45,8 @@ void MainWindow::on_ExitButton_clicked()
 void MainWindow::connectedToServer()
 {
     ui->stackedWidget->setCurrentWidget(ui->ChatPage);
-    m_chatClient->sendMessage(ui->UserNameEdit->text(),"login");
+    ui->roomTextEdit->append("新用户已连接");
+    m_chatClient->sendMessage(ui->UserName->text(),"login");
 
 }
 

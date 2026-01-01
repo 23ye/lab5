@@ -41,10 +41,10 @@ public:
     QFrame *loginFrame;
     QVBoxLayout *verticalLayout_2;
     QGridLayout *gridLayout;
-    QLabel *ServerEdit;
-    QLineEdit *lineEdit;
-    QLabel *UserNameEdit;
-    QLineEdit *lineEdit_2;
+    QLabel *Server;
+    QLineEdit *ServerEdit;
+    QLabel *UserName;
+    QLineEdit *UserNameEdit;
     QSpacerItem *verticalSpacer;
     QPushButton *LoginButton;
     QSpacerItem *horizontalSpacer_2;
@@ -118,25 +118,25 @@ public:
         verticalLayout_2->setObjectName("verticalLayout_2");
         gridLayout = new QGridLayout();
         gridLayout->setObjectName("gridLayout");
-        ServerEdit = new QLabel(loginFrame);
+        Server = new QLabel(loginFrame);
+        Server->setObjectName("Server");
+
+        gridLayout->addWidget(Server, 0, 0, 1, 1);
+
+        ServerEdit = new QLineEdit(loginFrame);
         ServerEdit->setObjectName("ServerEdit");
 
-        gridLayout->addWidget(ServerEdit, 0, 0, 1, 1);
+        gridLayout->addWidget(ServerEdit, 0, 1, 1, 1);
 
-        lineEdit = new QLineEdit(loginFrame);
-        lineEdit->setObjectName("lineEdit");
+        UserName = new QLabel(loginFrame);
+        UserName->setObjectName("UserName");
 
-        gridLayout->addWidget(lineEdit, 0, 1, 1, 1);
+        gridLayout->addWidget(UserName, 1, 0, 1, 1);
 
-        UserNameEdit = new QLabel(loginFrame);
+        UserNameEdit = new QLineEdit(loginFrame);
         UserNameEdit->setObjectName("UserNameEdit");
 
-        gridLayout->addWidget(UserNameEdit, 1, 0, 1, 1);
-
-        lineEdit_2 = new QLineEdit(loginFrame);
-        lineEdit_2->setObjectName("lineEdit_2");
-
-        gridLayout->addWidget(lineEdit_2, 1, 1, 1, 1);
+        gridLayout->addWidget(UserNameEdit, 1, 1, 1, 1);
 
 
         verticalLayout_2->addLayout(gridLayout);
@@ -220,8 +220,10 @@ public:
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "\350\201\212\345\244\251\345\256\244\345\256\242\346\210\267\347\253\257", nullptr));
         titleLabel->setText(QCoreApplication::translate("MainWindow", "\346\233\276\347\202\253\346\235\260\347\232\204\350\201\212\345\244\251\345\256\244", nullptr));
-        ServerEdit->setText(QCoreApplication::translate("MainWindow", "\346\234\215\345\212\241\345\231\250\345\234\260\345\235\200\357\274\232", nullptr));
-        UserNameEdit->setText(QCoreApplication::translate("MainWindow", "\346\230\265\347\247\260\357\274\232", nullptr));
+        Server->setText(QCoreApplication::translate("MainWindow", "\346\234\215\345\212\241\345\231\250\345\234\260\345\235\200\357\274\232", nullptr));
+        ServerEdit->setText(QCoreApplication::translate("MainWindow", "127.0.0.1", nullptr));
+        UserName->setText(QCoreApplication::translate("MainWindow", "\346\230\265\347\247\260\357\274\232", nullptr));
+        UserNameEdit->setText(QCoreApplication::translate("MainWindow", "zxj", nullptr));
         LoginButton->setText(QCoreApplication::translate("MainWindow", "\347\231\273\345\275\225\350\201\212\345\244\251\345\256\244", nullptr));
         SendButton->setText(QCoreApplication::translate("MainWindow", "\345\217\221\351\200\201", nullptr));
         ExitButton->setText(QCoreApplication::translate("MainWindow", "\351\200\200\345\207\272", nullptr));

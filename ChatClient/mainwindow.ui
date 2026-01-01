@@ -92,24 +92,32 @@ border-radius:25px;
            <item>
             <layout class="QGridLayout" name="gridLayout">
              <item row="0" column="0">
-              <widget class="QLabel" name="ServerEdit">
+              <widget class="QLabel" name="Server">
                <property name="text">
                 <string>服务器地址：</string>
                </property>
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QLineEdit" name="lineEdit"/>
+              <widget class="QLineEdit" name="ServerEdit">
+               <property name="text">
+                <string>127.0.0.1</string>
+               </property>
+              </widget>
              </item>
              <item row="1" column="0">
-              <widget class="QLabel" name="UserNameEdit">
+              <widget class="QLabel" name="UserName">
                <property name="text">
                 <string>昵称：</string>
                </property>
               </widget>
              </item>
              <item row="1" column="1">
-              <widget class="QLineEdit" name="lineEdit_2"/>
+              <widget class="QLineEdit" name="UserNameEdit">
+               <property name="text">
+                <string>zxj</string>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>

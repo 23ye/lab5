@@ -11,7 +11,6 @@ ChatClient::ChatClient(QObject *parent)
     connect(m_clientSocket,&QTcpSocket::connected,this,&ChatClient::connected);
     connect(m_clientSocket,&QTcpSocket::readyRead,this,&ChatClient::onReadyRead);
 
-
 }
 
 void ChatClient::onReadyRead()

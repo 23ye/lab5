@@ -2,7 +2,8 @@
 #define CHATCLIENT_H
 
 #include <QObject>
-#include <QtcpSocket>
+#include <QTcpSocket>
+
 
 class ChatClient : public QObject
 {
