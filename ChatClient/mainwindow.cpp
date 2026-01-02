@@ -46,6 +46,12 @@ void MainWindow::on_ExitButton_clicked()
 {
     m_chatClient->disconnectFromServer();
     ui->stackedWidget->setCurrentWidget(ui->LoginPage);
+
+    for(auto aItem:ui->userListWidget->findItems(ui->UserNameEdit->text(),Qt::MatchExactly)){
+        qDebug("remove");
+        ui->userListWidget->removeItemWidget(aItem);
+        delete aItem;
+    }
 }
 
 void MainWindow::connectedToServer()
@@ -107,7 +113,11 @@ void MainWindow::userJoined(const QString &user)
 
 void MainWindow::userLeft(const QString &user)
 {
-
+    for(auto aItem:ui->userListWidget->findItems(user,Qt::MatchExactly)){
+        qDebug("remove");
+        ui->userListWidget->removeItemWidget(aItem);
+        delete aItem;
+    }
 }
 
 void MainWindow::userListReceived(const QStringList &list)

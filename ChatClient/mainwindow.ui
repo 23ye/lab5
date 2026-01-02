@@ -43,7 +43,7 @@ border-radius:25px;
     <item>
      <widget class="QLabel" name="titleLabel">
       <property name="text">
-       <string>曾炫杰的聊天室</string>
+       <string>曾炫杰的聊天室(2023414290239)</string>
       </property>
      </widget>
     </item>
